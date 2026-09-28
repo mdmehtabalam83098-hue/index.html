@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Border Surveillance</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #0b1220;
+            color: white;
+        }
+
+        header {
+            background: #162033;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 2px solid #2d405f;
+        }
+
+        header h1 {
+            font-size: 28px;
+        }
+
+        header p {
+            color: #9fb3cc;
+            margin-top: 5px;
+        }
+
+        .container {
+            padding: 20px;
+        }
+
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background: #162033;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid #293b57;
+        }
+
+        .number {
+            font-size: 30px;
+            font-weight: bold;
+            margin-top: 8px;
+        }
+
+        .green {
+            color: #35d07f;
+        }
+
+        .yellow {
+            color: #ffd166;
+        }
+
+        .red {
+            color: #ff5c5c;
+        }
+
+        .blue {
+            color: #55aaff;
+        }
+
+        .zones {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .zone {
+            background: #162033;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #293b57;
+        }
+
+        .zone h2 {
+            margin-bottom: 15px;
+        }
+
+        .status {
+            padding: 8px 12px;
+            border-radius: 20px;
+            display: inline-block;
+            font-weight: bold;
+            margin-bottom: 12px;
+        }
+
+        .normal {
+            background: #123b29;
+            color: #35d07f;
+        }
+
+        .warning {
+            background: #493c16;
+            color: #ffd166;
+        }
+
+        .alert {
+            background: #4a1c1c;
+            color: #ff5c5c;
+        }
+
+        button {
+            background: #2878ff;
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background: #155dcc;
+        }
+
+        .alert-box {
+            margin-top: 20px;
+            background: #351919;
+            border: 1px solid #ff5c5c;
+            padding: 20px;
+            border-radius: 10px;
+            display: none;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #8495ad;
+        }
+
+        @media(max-width: 700px) {
+            .summary,
+            .zones {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>🛡️ Smart Border Surveillance System</h1>
+    <p>Real-Time Security Monitoring Dashboard</p>
+</header>
+
+<div class="container">
+
+    <!-- Summary -->
+    <div class="summary">
+
+        <div class="card">
+            <h3>Total Zones</h3>
+            <div class="number blue">4</div>
+        </div>
+
+        <div class="card">
+            <h3>Normal</h3>
+            <div class="number green" id="normalCount">2</div>
+        </div>
+
+        <div class="card">
+            <h3>Warnings</h3>
+            <div class="number yellow" id="warningCount">1</div>
+        </div>
+
+        <div class="card">
+            <h3>Alerts</h3>
+            <div class="number red" id="alertCount">1</div>
+        </div>
+
+    </div>
+
+    <!-- Zones -->
+
+    <div class="zones">
+
+        <div class="zone">
+            <h2>📍 Zone A</h2>
+            <div class="status normal">● NORMAL</div>
+            <p>Camera Status: Online</p>
+            <p>Sensor Status: Active</p>
+            <p>Activity: Normal</p>
+        </div>
+
+        <div class="zone">
+            <h2>📍 Zone B</h2>
+            <div class="status normal">● NORMAL</div>
+            <p>Camera Status: Online</p>
+            <p>Sensor Status: Active</p>
+            <p>Activity: Normal</p>
+        </div>
+
+        <div class="zone">
+            <h2>📍 Zone C</h2>
+            <div class="status warning">● WARNING</div>
+            <p>Camera Status: Online</p>
+            <p>Sensor Status: Active</p>
+            <p>Activity: Unusual Movement</p>
+            <button onclick="showAlert('Zone C')">
+                View Details
+            </button>
+        </div>
+
+        <div class="zone">
+            <h2>📍 Zone D</h2>
+            <div class="status alert">● ALERT</div>
+            <p>Camera Status: Online</p>
+            <p>Sensor Status: Active</p>
+            <p>Activity: Unknown Movement</p>
+            <button onclick="showAlert('Zone D')">
+                View Alert
+            </button>
+        </div>
+
+    </div>
+
+    <!-- Alert -->
+    <div class="alert-box" id="alertBox">
+        <h2>🚨 Security Alert</h2>
+        <br>
+        <p id="alertText"></p>
+        <br>
+        <button onclick="closeAlert()">Acknowledge Alert</button>
+    </div>
+
+</div>
+
+<footer>
+    Smart Border Surveillance System | Student Prototype
+</footer>
+
+<script>
+
+function showAlert(zone) {
+
+    document.getElementById("alertBox").style.display = "block";
+
+    document.getElementById("alertText").innerHTML =
+        "Unusual activity detected in <b>" + zone +
+        "</b>.<br><br>" +
+        "Time: " + new Date().toLocaleTimeString() +
+        "<br>" +
+        "Status: Under Investigation";
+}
+
+function closeAlert() {
+
+    document.getElementById("alertBox").style.display = "none";
+
+}
+
+</script>
+
+</body>
+</html>
